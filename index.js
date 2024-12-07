@@ -1,13 +1,16 @@
 const express = require('express');
+const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Schema = mongoose.Schema;
 
-const app = express();
 const { PORT = 3000 } = process.env;
+const { DATA_BASE = 'mongodb://127.0.0.1:27017/wccdb' } = process.env;
+
+const app = express();
 app.use(bodyParser.json());
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
@@ -15,7 +18,7 @@ app.use(
   })
 );
 
-mongoose.connect('mongodb://localhost:27017/wccdb');
+mongoose.connect(DATA_BASE);
 
 const userSchema = new Schema(
   {
@@ -56,7 +59,5 @@ app.post('/', (req, res) => {
       res.status(500).send(error);
     });
 });
-
-// Обновление юзера
 
 app.listen(PORT);
